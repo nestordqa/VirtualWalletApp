@@ -1,3 +1,4 @@
+//Routes names
 export const routes = {
     home: 'Home',
     login: 'Login',

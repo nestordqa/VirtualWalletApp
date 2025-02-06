@@ -1,50 +1,69 @@
+/**
+ * @file ReusableButton Component
+ * @description This component renders a customizable button with loading and disabled states.
+ *              It uses a `TouchableOpacity` to provide a clickable interface with text and an optional loading indicator.
+ * @module ReusableButton
+ */
+
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import colors from '../../config/colors';
+import { ButtonProps } from '../../types/common';
 
-interface Props {
-    loading: boolean;
-    disabled?: boolean; // El ? indica que es opcional
-    text: string;
-    cb: () => void; // cb es de tipo función que no recibe argumentos y no retorna nada (void)
-    style?: any; // Permite pasar estilos adicionales
-    textStyle?: any; // Permite pasar estilos adicionales al texto
-}
-
-const ReusableButton: React.FC<Props> = ({ loading, disabled, text, cb, style, textStyle }) => {
+/**
+ * @function ReusableButton
+ * @description A reusable component for rendering a customizable button.
+ * @param {Props} props - The component props.
+ * @returns {JSX.Element} A `TouchableOpacity` with either an `ActivityIndicator` (loading) or text.
+ */
+const ReusableButton: React.FC<ButtonProps> = ({
+    loading,
+    disabled,
+    text,
+    cb,
+    style,
+    textStyle,
+    size = '100%'
+}) => {
     return (
         <TouchableOpacity
             style={[
                 styles.button,
-                style, // Aplica estilos adicionales si se proporcionan
-                disabled || loading ? styles.disabledButton : {}, // Estilo para cuando el botón está deshabilitado o en loading
+                size,
+                style,
+                disabled || loading ? styles.disabledButton : {},
             ]}
-            onPress={cb} // Llama al callback cuando se presiona el botón
-            disabled={disabled || loading} // Deshabilita el botón si está en loading o está explícitamente deshabilitado
+            onPress={cb}
+            disabled={disabled || loading}
         >
             {loading ? (
-                <ActivityIndicator size="small" color="#fff" /> // Spinner de carga
+                <ActivityIndicator size="small" color="#fff" />
             ) : (
-                <Text style={[styles.buttonText, textStyle]}>{text}</Text> // Muestra el texto del botón
+                <Text style={[styles.buttonText, textStyle]}>{text}</Text>
             )}
         </TouchableOpacity>
     );
 };
 
+/**
+ * @const styles
+ * @description StyleSheet for the ReusableButton component.
+ */
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#28a745',
+        backgroundColor: colors.primaryColor,
         padding: 15,
         borderRadius: 8,
         alignItems: 'center',
     },
     buttonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     disabledButton: {
-        backgroundColor: '#aaa', // Un color más claro para indicar que está deshabilitado
-        opacity: 0.7, // Reduce la opacidad para indicar que está deshabilitado
+        backgroundColor: '#aaa',
+        opacity: 0.7,
     },
 });
 

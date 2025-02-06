@@ -3,9 +3,10 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import { store } from '../store/store';
 import { logout } from '../store/authSlice';
+import constants from '../config/constants';
 
 const apiClient = axios.create({
-	baseURL: 'http://192.168.31.64:3000', // Usa la URL de la API desde las variables de entorno
+	baseURL: constants.API_URL, // Usa la URL de la API desde las variables de entorno
 	timeout: 10000, // Tiempo de espera para las solicitudes
 	headers: {
 		'Content-Type': 'application/json',
