@@ -107,7 +107,7 @@ const Router = () => {
                     headerTitle: () => <CustomText color={colors.white} text="Wallet" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <CustomText size="body" text="Wallet"/>;
+                        return <CustomText size="body" text="Wallet" color={colors.darkGrey60}/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
@@ -122,7 +122,7 @@ const Router = () => {
             />
 
             <Tab.Screen
-                name={routes.transactionsHistory}
+                name={routes.transfer}
                 component={HomeScreen}
                 options={{
                     headerShown: true,
@@ -132,7 +132,7 @@ const Router = () => {
                     headerTitle: () => <CustomText color={colors.white} text="Send Money" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <CustomText size="body" text="Send Money"/>;
+                        return <CustomText size="body" text="Send Money" color={colors.darkGrey60}/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
@@ -161,7 +161,7 @@ const Router = () => {
                     headerTitle: () => <CustomText color={colors.white} text="Recharge Money" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <CustomText size="body" text="Recharge Money"/>;
+                        return <CustomText size="body" text="Recharge Money" color={colors.darkGrey60}/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon

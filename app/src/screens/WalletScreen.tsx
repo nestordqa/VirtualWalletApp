@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+/**
+ * @file WalletScreen Component
+ * @description This component displays the user's wallet information, including balance and recent transactions.
+ *              It fetches transaction data from the API and handles loading and error states using the `useTransactionsData` custom hook.
+ * @module WalletScreen
+ */
+
+import React from 'react';
+import { FlatList, StyleSheet, Alert, View, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
@@ -7,79 +14,76 @@ import { logout } from '../store/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { routes } from '../navigation/routes';
 import ReusableButton from '../components/common/Button';
-import { fetchUserTransactions } from '../api/transactionApi';
-import { setTransactions } from '../store/walletSlice';
 import TransactionItem from '../components/transactions/TransactionItem';
 import CustomText from '../components/common/CustomText';
-import { SafeAreaView } from 'react-native-safe-area-context';  // Importa SafeAreaView
+import { SafeAreaView } from 'react-native-safe-area-context';
+import colors from '../config/colors';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import { useTransactionsData } from '../hooks/useTransactionsData';
 
+/**
+ * @function WalletScreen
+ * @description A functional component that renders the user's wallet information and transaction history.
+ * @returns {JSX.Element} The rendered WalletScreen component.
+ */
 const WalletScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const transactions = useSelector((state: RootState) => state.transactions.history);
-    const { jwt, user } = useSelector((state: RootState) => state.auth); // user y jwt
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);  // Para almacenar mensajes de error
+    const { jwt, user } = useSelector((state: RootState) => state.auth);
 
-    const getTransactions = useCallback(async () => {
-        setLoading(true);
-        try {
-            const transactionList = await fetchUserTransactions(jwt as string);
-            if (transactionList) {
-                dispatch(setTransactions(transactionList));
-            }
-        } catch (err: any) {
-            setError(err.message || 'Failed to fetch transactions.');  // Almacena el mensaje de error
-        } finally {
-            setLoading(false);
-        }
-    }, [dispatch, jwt]);
+    /**
+     * @hook useTransactionsData
+     * @description Custom hook to fetch transactions and manage loading/error states.
+     */
+    const { transactions, loading, error, refetch } = useTransactionsData(jwt as string);
 
-    useEffect(() => {
-        if (jwt) {
-            getTransactions();
-        } else {
-            // navigation.navigate(routes.login);
-        }
-    }, [jwt, navigation, getTransactions]);
-
+    /**
+     * @function handleLogout
+     * @description Logs the user out by removing the JWT from AsyncStorage and dispatching the logout action.
+     */
     const handleLogout = async () => {
         try {
             await AsyncStorage.removeItem('jwt');
             dispatch(logout());
-            {/* @ts-ignore */}
+            //@ts-ignore
             navigation.navigate(routes.login);
-        } catch (error) {
-            console.error('Error during logout:', error);
-            Alert.alert('Error', 'Logout failed.');
+        } catch (logoutError: any) {
+            console.error('Error during logout:', logoutError);
+            Alert.alert('Error', 'Logout failed: ' + (logoutError.message || 'Unknown error'));
         }
     };
+
+    // Render loading indicator while data is being fetched
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={colors.primaryColor} />
+                <CustomText text="Loading transactions..." />
+            </View>
+        );
+    }
+
+    // Render error message if there's an error fetching transactions
     if (error) {
         return (
             <SafeAreaView style={styles.container}>
                 <CustomText text={error} color='red' />
-                <ReusableButton text="Reintentar" cb={getTransactions} loading={loading} disabled={loading} />
+                <ReusableButton text="Retry" cb={refetch} loading={loading} disabled={loading} />
             </SafeAreaView>
         );
     }
 
+    // Render the main content when data is successfully fetched
     return (
-        <SafeAreaView style={styles.container}>  {/* Usa SafeAreaView */}
-            <CustomText
-                text='My Wallet'
-                size='h2'
-                weight='bold'
-            />
-            {user && <CustomText text={`Welcome ${user.email}`}/>}
-            {user && <CustomText text={`Available Balance: $${user.balance}`}/>}
-            {/* @ts-ignore */}
-            <ReusableButton text="Add Balance" cb={() => navigation.navigate(routes.addBalance)} loading={loading} disabled={loading} />
-            {/* @ts-ignore */}
-            <ReusableButton text="Transfer Balance" cb={() => navigation.navigate(routes.transfer)} loading={loading} disabled={loading} />
-
+        <SafeAreaView style={styles.container}>
+            <View style={styles.textContainer}>
+                {user && <CustomText size='h1' weight='bold' text={`Welcome ${user.email}`} />}
+                {user && <CustomText text={`Available Balance: $${user.balance}`} color={colors.darkGrey60} />}
+            </View>
             <CustomText
                 text='Recent Transactions'
-                size='h4'
+                size='body'
+                color={colors.darkGrey60}
                 style={styles.subtitle}
             />
             <FlatList
@@ -88,25 +92,38 @@ const WalletScreen = () => {
                 renderItem={({ item }) => <TransactionItem transaction={item} />}
                 ListEmptyComponent={() => <CustomText text="No recent transactions." />}
             />
-            {/* <ReusableButton text="Logout" cb={handleLogout} loading={false} disabled={false} /> */}
         </SafeAreaView>
     );
 };
 
+/**
+ * @const styles
+ * @description StyleSheet for the WalletScreen component.
+ */
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.white,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.white,
+    },
+    textContainer: {
+        backgroundColor: colors.lightGrey50,
+        width: widthPercentageToDP(90),
+        height: heightPercentageToDP(10),
+        justifyContent: 'center',
+        rowGap: heightPercentageToDP(1),
+        borderRadius: widthPercentageToDP(5),
+        // paddingHorizontal: widthPercentageToDP(5)
     },
     subtitle: {
         marginTop: 20,
         marginBottom: 10,
-    },
-    link: {
-        color: '#28a745',
-        marginTop: 10,
-        textAlign: 'center',
     },
 });
 
