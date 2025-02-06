@@ -6,12 +6,24 @@
  */
 
 import React from "react";
-import { Platform, Text, View } from "react-native";
+import { Alert, Button, Platform, Text, TouchableOpacity, View } from "react-native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import { routes } from "./routes";
 import HomeScreen from "../screens/HomeScreen";
 import HomeIcon from "../assets/icons/HomeIcon";
+import WalletScreen from "../screens/WalletScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
+import ReusableButton from "../components/common/Button";
+import colors from "../config/colors";
+import WalletIcon from "../assets/icons/WalletIcon";
+import CustomText from "../components/common/CustomText";
+import TransferIcon from "../assets/icons/TransferIcon";
+import BackArrowIcon from "../assets/icons/BackIcon";
+import { useNavigation } from "@react-navigation/native";
+import RechargeIcon from "../assets/icons/RechargeIcon";
 
 /**
  * @const Tab
@@ -47,20 +59,38 @@ const TabBarIcon = ({
  * @description Configures and renders the bottom tab navigator with specified screens and options.
  * @returns {JSX.Element} The Tab.Navigator component with configured screens.
  */
+
 const Router = () => {
+
+    const navigation = useNavigation();
+
+    const dispatch = useDispatch();
+
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('jwt');
+            dispatch(logout());
+            {/* @ts-ignore */}
+            navigation.navigate(routes.login);
+        } catch (error) {
+            console.error('Error during logout:', error);
+            Alert.alert('Error', 'Logout failed.');
+        }
+    };
+
     return (
         <Tab.Navigator
             screenOptions={{
-                headerShown: false,
-                tabBarInactiveTintColor: '#ff0',
-                tabBarActiveTintColor: '#fff',
+                headerShown: true,
                 tabBarStyle: {
-                    backgroundColor: '#b2b2b2',
-                    height: heightPercentageToDP(Platform.OS === 'android' ? 10 : 11.5),
-                    paddingTop: 10,
-                    paddingHorizontal: 10,
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10
+                    backgroundColor: colors.primaryColor,
+                    height: heightPercentageToDP(10),
+                    paddingTop: heightPercentageToDP(2),
+                    // paddingHorizontal: 10,
+                    borderTopLeftRadius: heightPercentageToDP(2),
+                    borderTopRightRadius: heightPercentageToDP(2),
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 },
                 animation: 'shift'
             }}
@@ -68,16 +98,20 @@ const Router = () => {
         >
             <Tab.Screen
                 name={routes.home}
-                component={HomeScreen}
+                component={WalletScreen}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colors.primaryColor,
+                    },
+                    headerTitle: () => <CustomText color={colors.white} text="Wallet" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <Text>Home</Text>;
+                        return <CustomText size="body" text="Wallet"/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
-                            Svg={HomeIcon}
+                            Svg={WalletIcon}
                             focused={focused}
                             //@ts-ignore
                             // height={size}
@@ -88,17 +122,21 @@ const Router = () => {
             />
 
             <Tab.Screen
-                name={'routes.home'}
+                name={routes.transactionsHistory}
                 component={HomeScreen}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colors.primaryColor,
+                    },
+                    headerTitle: () => <CustomText color={colors.white} text="Send Money" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <Text>Home</Text>;
+                        return <CustomText size="body" text="Send Money"/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
-                            Svg={HomeIcon}
+                            Svg={TransferIcon}
                             focused={focused}
                             //@ts-ignore
                             // height={size}
@@ -109,17 +147,25 @@ const Router = () => {
             />
 
             <Tab.Screen
-                name={'routes.home2'}
+                name={routes.addBalance}
                 component={HomeScreen}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colors.primaryColor,
+                    },
+                    headerTintColor: colors.primaryColor,
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitle: () => <CustomText color={colors.white} text="Recharge Money" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <Text>Home</Text>;
+                        return <CustomText size="body" text="Recharge Money"/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
-                            Svg={HomeIcon}
+                            Svg={RechargeIcon}
                             focused={focused}
                             //@ts-ignore
                             // height={size}

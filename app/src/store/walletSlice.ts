@@ -1,94 +1,107 @@
 /**
- * @file walletSlice.ts
- * @description This file defines the Redux slice for managing wallet-related state, including actions
- *              for adding balance, transferring balance, and managing loading and error states.
- * @module walletSlice
+ * @file transactionsSlice.ts
+ * @description Redux slice para gestionar el estado de las transacciones, incluyendo historial, carga y errores.
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 /**
  * @interface Transaction
- * @description Interface defining the structure of a transaction object.
- * @property {string} id - The unique identifier for the transaction.
- * @property {number} amount - The amount of the transaction.
- * @property {string} description - A description of the transaction.
- * @property {Date} date - The date of the transaction.
+ * @description Interfaz que define la estructura de una transacción.
+ * @property {string} id - Identificador único de la transacción.
+ * @property {string} senderId - ID del usuario que envía la transacción.
+ * @property {string} receiverId - ID del usuario que recibe la transacción.
+ * @property {number} amount - Monto de la transacción.
+ * @property {string} date - Fecha de la transacción (en formato ISO string).
+ * @property {string} status - Estado de la transacción ('success', 'failed', 'pending').
  */
 interface Transaction {
     id: string;
+    senderId: string;
+    receiverId: string;
     amount: number;
-    description: string;
-    date: Date;
+    date: string;
+    status: 'success' | 'failed' | 'pending';
 }
 
 /**
- * @interface WalletState
- * @description Interface defining the structure of the wallet state.
- * @property {number} balance - The current balance of the wallet.
- * @property {Transaction[]} transactions - An array of transaction objects.
- * @property {boolean} loading - Indicates whether wallet data is being loaded.
- * @property {string | null} error - Any error that occurred while loading wallet data.
+ * @interface TransactionsState
+ * @description Interfaz que define la estructura del estado de las transacciones.
+ * @property {Transaction[]} history - Array que contiene el historial de transacciones.
+ * @property {boolean} loading - Indica si se están cargando las transacciones.
+ * @property {string | null} error - Mensaje de error, si ocurre alguno.
  */
-interface WalletState {
-    balance: number;
-    transactions: Transaction[];
+interface TransactionsState {
+    history: Transaction[];
     loading: boolean;
     error: string | null;
 }
 
 /**
  * @const initialState
- * @description The initial state for the wallet slice.
+ * @description Estado inicial del slice de transacciones.
  */
-const initialState: WalletState = {
-    balance: 0,
-    transactions: [],
+const initialState: TransactionsState = {
+    history: [],
     loading: false,
     error: null,
 };
 
 /**
- * @const walletSlice
- * @description Creates a Redux slice for managing wallet-related state.
+ * @const transactionsSlice
+ * @description Crea un slice de Redux para gestionar el estado de las transacciones.
  */
-const walletSlice = createSlice({
-    name: 'wallet',
+const transactionsSlice = createSlice({
+    name: 'transactions',
     initialState,
     reducers: {
         /**
-         * @function addBalance
-         * @description Reducer for adding balance to the wallet.
-         * @param {WalletState} state - The current wallet state.
-         * @param {PayloadAction<number>} action - The action payload containing the amount to add.
+         * @function setTransactions
+         * @description Reducer para establecer el historial de transacciones.
+         * @param {TransactionsState} state - El estado actual de las transacciones.
+         * @param {PayloadAction<Transaction[]>} action - Payload con el array de transacciones.
          */
-        addBalance: (state, action: PayloadAction<number>) => {
-            state.balance += action.payload;
+        setTransactions: (state, action: PayloadAction<Transaction[]>) => {
+            state.history = action.payload;
+            state.loading = false;
+            state.error = null;
         },
         /**
-         * @function transferBalance
-         * @description Reducer for transferring balance from the wallet.
-         * @param {WalletState} state - The current wallet state.
-         * @param {PayloadAction<Transaction>} action - The action payload containing the transaction object.
+         * @function addTransaction
+         * @description Reducer para agregar una nueva transacción al historial.
+         * @param {TransactionsState} state - El estado actual de las transacciones.
+         * @param {PayloadAction<Transaction>} action - Payload con la transacción a agregar.
          */
-        transferBalance: (state, action: PayloadAction<Transaction>) => {
-            state.balance -= action.payload.amount;
-            state.transactions.push(action.payload);
+        addTransaction: (state, action: PayloadAction<Transaction>) => {
+            state.history = [action.payload, ...state.history];  // Agrega la nueva transacción al inicio
+        },
+        /**
+         * @function updateTransaction
+         * @description Reducer para actualizar el estado de una transacción existente.
+         * @param {TransactionsState} state - El estado actual de las transacciones.
+         * @param {PayloadAction<{ id: string; status: string }>} action - Payload con el ID de la transacción y el nuevo estado.
+         */
+        updateTransaction: (state, action: PayloadAction<{ id: string; status: 'success' | 'failed' | 'pending' }>) => {
+            const { id, status } = action.payload;
+            const transaction = state.history.find((t) => t.id === id);
+            if (transaction) {
+                transaction.status = status;
+            }
         },
         /**
          * @function setLoading
-         * @description Reducer for setting the loading state.
-         * @param {WalletState} state - The current wallet state.
-         * @param {PayloadAction<boolean>} action - The action payload containing the loading state.
+         * @description Reducer para establecer el estado de carga.
+         * @param {TransactionsState} state - El estado actual de las transacciones.
+         * @param {PayloadAction<boolean>} action - Payload con el estado de carga.
          */
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
         /**
          * @function setError
-         * @description Reducer for setting the error state.
-         * @param {WalletState} state - The current wallet state.
-         * @param {PayloadAction<string | null>} action - The action payload containing the error message.
+         * @description Reducer para establecer el mensaje de error.
+         * @param {TransactionsState} state - El estado actual de las transacciones.
+         * @param {PayloadAction<string | null>} action - Payload con el mensaje de error.
          */
         setError: (state, action: PayloadAction<string | null>) => {
             state.error = action.payload;
@@ -98,12 +111,18 @@ const walletSlice = createSlice({
 
 /**
  * @exports actions
- * @description Exports the action creators generated by the slice.
+ * @description Exporta las acciones generadas por el slice.
  */
-export const { addBalance, transferBalance, setLoading, setError } = walletSlice.actions;
+export const {
+    setTransactions,
+    addTransaction,
+    updateTransaction,
+    setLoading,
+    setError,
+} = transactionsSlice.actions;
 
 /**
- * @exports walletReducer
- * @description Exports the reducer function for the wallet slice.
+ * @exports transactionsReducer
+ * @description Exporta el reducer del slice.
  */
-export const walletReducer = walletSlice.reducer;
+export const transactionReducer = transactionsSlice.reducer;

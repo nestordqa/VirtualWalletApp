@@ -15,6 +15,7 @@ interface User {
     id: string;
     name: string;
     email: string;
+    balance: number;
     // Add more user properties here
 }
 
