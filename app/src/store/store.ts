@@ -1,12 +1,14 @@
-// store/store.ts
+// src/store/store.ts
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './authSlice'; // Importa el slice de autenticación
 import { walletReducer } from './walletSlice';
 import { userReducer } from './userSlice';
 
 export const store = configureStore({
     reducer: {
         wallet: walletReducer,
-        user: userReducer
+        user: userReducer,
+        auth: authReducer, // Registra el slice de autenticación
     },
 });
 

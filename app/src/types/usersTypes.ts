@@ -2,6 +2,7 @@ interface User {
     id: string;
     name: string;
     email: string;
+    balance: number 
 }
 
 interface UserState {
