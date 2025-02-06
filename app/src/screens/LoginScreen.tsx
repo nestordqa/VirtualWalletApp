@@ -1,142 +1,152 @@
-// src/screens/LoginScreen.tsx
-import React, { useCallback, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import { login } from '../api/authApi';
+import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../store/authSlice';
-import { useNavigation } from '@react-navigation/native'; // Importa useNavigation
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { login } from '../api/authApi';
 import { routes } from '../navigation/routes';
+import ReusableButton from '../components/common/Button';
 
-// Esquema de validación con Yup
+interface LoginFormInputs {
+    email: string;
+    password: string;
+}
+
 const loginSchema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Email is required'),
     password: yup.string().required('Password is required'),
 });
 
 const LoginScreen = () => {
-    console.log('entrando!');
     const dispatch = useDispatch();
-    const navigation = useNavigation(); // Inicializa useNavigation
-    const { user, isAuthenticated, jwt } = useSelector((state: RootState) => state.auth);
+    const navigation = useNavigation();
 
-    console.log(user, isAuthenticated, jwt)
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(loginSchema), // Integra Yup con React Hook Form
-        defaultValues: {
-            email: '',
-            password: '',
-        },
+    const { control, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>({
+        resolver: useMemo(() => yupResolver(loginSchema), []),
     });
 
-    // Usa useCallback para memoizar la función onSubmit
-    const onSubmit = useCallback(async (data: { email: string; password: string }) => {
-        try {
-          const loginRequest = await login(data.email, data.password);
-          if (loginRequest && loginRequest.jwt) {
-              dispatch(loginSuccess({ jwt: loginRequest.jwt, user: loginRequest.user }))
-          }
-        } catch (error) {
-            Alert.alert('Login Failed', 'Invalid credentials.');
-        }
-    }, [dispatch]); // Dependencias: dispatch
+    const onSubmit = useCallback(async (data: LoginFormInputs) => {
+        setLoading(true);
+        setError('');
 
-    // Usa useEffect para redirigir cuando isAuthenticated cambie
-    useEffect(() => {
-        if (isAuthenticated) {
-            //@ts-ignore
-            navigation.navigate(routes.home);
+        try {
+            const loginRequest = await login(data.email, data.password);
+            if (loginRequest && loginRequest.jwt) {
+                await AsyncStorage.setItem('jwt', loginRequest.jwt);
+                dispatch(loginSuccess({ jwt: loginRequest.jwt, user: loginRequest.user }));
+                navigation.navigate(routes.home);
+            } else {
+                setError('Login failed: No JWT received');
+                Alert.alert('Error', 'No JWT received');
+            }
+        } catch (e: any) {
+            setError(e.response?.data?.message || 'Error al iniciar sesión');
+            Alert.alert('Error', e.response?.data?.message || 'Error al iniciar sesión');
+        } finally {
+            setLoading(false);
         }
-    }, [isAuthenticated, navigation]); // Dependencias: isAuthenticated, navigation
+    }, [dispatch, navigation]);
+
+    // Memoized functions for rendering TextInput components
+    const renderEmailInput = useCallback(({ field: { onChange, onBlur, value } }: any) => (
+        <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+        />
+    ), []);
+
+    const renderPasswordInput = useCallback(({ field: { onChange, onBlur, value } }: any) => (
+        <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            placeholder="Password"
+            secureTextEntry
+        />
+    ), []);
+
+    const memoizedLoginButton = useMemo(() => (
+        <ReusableButton
+            loading={loading}
+            disabled={loading}
+            text={loading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
+            cb={handleSubmit(onSubmit)}
+        />
+    ), [loading, handleSubmit, onSubmit]);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>Iniciar Sesión</Text>
 
-            {/* Campo de Email */}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+
             <Controller
                 control={control}
                 name="email"
-                render={({ field: { onChange, onBlur, value } }) => (
-                <View>
-                    <TextInput
-                    placeholder="Email"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    style={styles.input}
-                    keyboardType="email-address"
-                    />
-                    {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
-                </View>
-                )}
+                rules={{ required: true }}
+                render={renderEmailInput}
             />
+            {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
-            {/* Campo de Contraseña */}
             <Controller
                 control={control}
                 name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
-                <View>
-                    <TextInput
-                    placeholder="Password"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    secureTextEntry
-                    style={styles.input}
-                    />
-                    {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
-                </View>
-                )}
+                rules={{ required: true }}
+                render={renderPasswordInput}
             />
+            {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-            {/* Botón de Login */}
-            <Button title="Login" onPress={handleSubmit(onSubmit)} />
-
-            {/* Mensaje de Bienvenida */}
-            {isAuthenticated && user && (
-                <View style={styles.welcomeContainer}>
-                <Text>Welcome, {user.email}!</Text>
-                <Text>Your balance: ${user.balance}</Text>
-                </View>
-            )}
+            {memoizedLoginButton}
+            <TouchableOpacity onPress={() => navigation.navigate(routes.register)}>
+                <Text style={styles.link}>¿No tienes una cuenta? Regístrate</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
-// Estilos
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-  },
-  welcomeContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 20,
+        backgroundColor: '#f0f0f0',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    input: {
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 8,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+    },
+    error: {
+        color: 'red',
+        marginBottom: 10,
+    },
+    link: {
+        color: '#28a745',
+        marginTop: 15,
+        textAlign: 'center',
+    },
 });
 
 export default LoginScreen;

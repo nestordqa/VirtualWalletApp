@@ -1,6 +1,5 @@
 // src/store/authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginThunk } from './thunks';
 
 interface User {
     id: string;
