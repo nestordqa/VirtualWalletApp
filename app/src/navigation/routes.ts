@@ -2,5 +2,8 @@
 export const routes = {
     home: 'Home',
     login: 'Login',
-    register: 'Register'
+    register: 'Register',
+    addBalance: 'Add Balance',
+    transfer: 'Transfer',
+    transactionsHistory: 'Transactions',
 };

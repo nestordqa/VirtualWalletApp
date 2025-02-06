@@ -13,25 +13,4 @@ const apiClient = axios.create({
 	},
 });
 
-// Interceptor para agregar el token JWT a las solicitudes
-apiClient.interceptors.request.use((config) => {
-	const token = store.getState().auth.jwt;
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
-	}
-	return config;
-});
-
-// Interceptor para manejar errores globales
-apiClient.interceptors.response.use(
-	(response) => response,
-	(error) => {
-		if (error.response?.status === 401) {
-			// Si el token es inválido o expiró, cierra la sesión
-			store.dispatch(logout());
-		}
-		return Promise.reject(error);
-	}
-);
-
 export default apiClient;
