@@ -162,7 +162,7 @@ const WalletScreen = () => {
                 style={styles.subtitle}
             />
             <FlatList
-                data={transactions ?? []}
+                data={transactions?.slice(0, 5) ?? []}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => <TransactionItem transaction={item} />}
                 ListEmptyComponent={() => <CustomText text="No recent transactions." />}
@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: colors.white,
+        justifyContent: 'space-around',
     },
     loadingContainer: {
         flex: 1,
@@ -212,6 +213,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         rowGap: heightPercentageToDP(1),
         borderRadius: widthPercentageToDP(5),
+        marginBottom: 10
     },
     subtitle: {
         marginTop: 20,

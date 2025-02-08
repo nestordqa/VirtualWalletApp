@@ -164,7 +164,7 @@ const TransferScreen = () => {
 
             {selectedUser && (
                 <View style={styles.transferSection}>
-                    <CustomText text={`Selected Recipient: ${selectedUser.email}`} style={styles.selectedRecipientText} />
+                    <CustomText text={`Selected user: ${selectedUser.email}`} style={styles.selectedRecipientText} />
                     <TextInput
                         style={styles.input}
                         keyboardType="numeric"
@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
+        borderRadius: 5
     },
     //Added this style
     balanceContainer: {
