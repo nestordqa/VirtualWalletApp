@@ -38,7 +38,7 @@ export interface RegisterFormInputs {
  * @property {any} [size] - The size of the button.
  */
 export interface ButtonProps {
-    loading: boolean;
+    loading?: boolean;
     disabled?: boolean;
     text: string;
     cb: () => void;
