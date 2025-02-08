@@ -145,35 +145,6 @@ const Router = () => {
                     )
                 }}
             />
-
-            <Tab.Screen
-                name={routes.addBalance}
-                component={HomeScreen}
-                options={{
-                    headerShown: true,
-                    headerStyle: {
-                        backgroundColor: colors.primaryColor,
-                    },
-                    headerTintColor: colors.primaryColor,
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitle: () => <CustomText color={colors.white} text="Recharge Money" size="h1" weight="bold"/>,
-                    //@ts-ignore
-                    tabBarLabel: ({ focused, color }) => {
-                        return <CustomText size="body" text="Recharge Money" color={colors.darkGrey60}/>;
-                    },
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <TabBarIcon
-                            Svg={RechargeIcon}
-                            focused={focused}
-                            //@ts-ignore
-                            // height={size}
-                            color={color}
-                        />
-                    )
-                }}
-            />
         </Tab.Navigator>
     );
 };

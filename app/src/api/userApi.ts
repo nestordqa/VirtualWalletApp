@@ -6,7 +6,7 @@ interface User {
     id: string;
     email: string;
     password?: string;
-    balance?: number;
+    balance: number;
 }
 
 export const fetchUserProfile = async (): Promise<User | null> => {
@@ -22,9 +22,13 @@ export const fetchUserProfile = async (): Promise<User | null> => {
     }
 };
 
-export const loadBalance = async (amount: number): Promise<User | null> => {
+export const loadBalance = async (amount: number, jwt: string): Promise<User | null> => {
     try {
-        const response = await apiClient.post('/users/load-balance', { amount });
+        const response = await apiClient.post('/users/load-balance', { amount }, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
         if (isSuccess(response.data)) {
             return response.data.data as User;
         }
