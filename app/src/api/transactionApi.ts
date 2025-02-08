@@ -9,25 +9,6 @@ import apiClient from './apiClient';
 import { isSuccess } from '../utils/handleError';
 
 /**
- * @interface Transaction
- * @description Interface defining the structure of a transaction object.
- * @property {string} id - The unique identifier for the transaction.
- * @property {number} amount - The amount of the transaction.
- * @property {string} date - The date the transaction occurred.
- * @property {'success' | 'failed' | 'pending'} status - The status of the transaction.
- * @property {string} senderId - The ID of the sender.
- * @property {string} receiverId - The ID of the receiver.
- */
-interface Transaction {
-    id: string;
-    amount: number;
-    date: string;
-    status: 'success' | 'failed' | 'pending';
-    senderId: string;
-    receiverId: string;
-}
-
-/**
  * @function createTransaction
  * @description Creates a new transaction by sending a POST request to the API.
  * @param {string} receiverEmail - The email address of the receiver.
@@ -35,9 +16,13 @@ interface Transaction {
  * @returns {Promise<Transaction | null>} A promise that resolves to the created transaction or null if there was an error.
  * @throws {Error} If the API request fails.
  */
-export const createTransaction = async (receiverEmail: string, amount: number): Promise<Transaction | null> => {
+export const createTransaction = async (receiverEmail: string, amount: number, jwt: string): Promise<Transaction | null> => {
     try {
-        const response = await apiClient.post('/transactions', { receiverEmail, amount });
+        const response = await apiClient.post('/transactions', { receiverEmail, amount }, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
         if (isSuccess(response.data)) {
             return response.data.data as Transaction;
         }

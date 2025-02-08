@@ -2,13 +2,6 @@
 import apiClient from './apiClient';
 import { isSuccess } from '../utils/handleError';
 
-interface User {
-    id: string;
-    email: string;
-    password?: string;
-    balance: number;
-}
-
 export const fetchUserProfile = async (): Promise<User | null> => {
     try {
         const response = await apiClient.get('/users/profile');
@@ -39,9 +32,13 @@ export const loadBalance = async (amount: number, jwt: string): Promise<User | n
     }
 };
 
-export const fetchAllUsers = async (): Promise<User[] | null> => {
+export const fetchAllUsers = async (jwt: string | null): Promise<User[] | null> => {
     try {
-        const response = await apiClient.get('/users');
+        const response = await apiClient.get('/users', {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
         if (isSuccess(response.data)) {
             return response.data.data as User[];
         }

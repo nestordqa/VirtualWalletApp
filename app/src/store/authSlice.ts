@@ -8,19 +8,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 /**
- * @interface User
- * @description Interface defining the structure of the user object.
- * @property {string} id - The user's unique identifier.
- * @property {string} email - The user's email address.
- * @property {number} balance - The user's account balance.
- */
-interface User {
-    id: string;
-    email: string;
-    balance: number;
-}
-
-/**
  * @interface AuthState
  * @description Interface defining the structure of the authentication state.
  * @property {string | null} jwt - The JSON Web Token (JWT) for authentication.

@@ -8,7 +8,7 @@
 import React from "react";
 import { Alert, Button, Platform, Text, TouchableOpacity, View } from "react-native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { heightPercentageToDP } from "react-native-responsive-screen";
+import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 import { routes } from "./routes";
 import HomeScreen from "../screens/HomeScreen";
 import HomeIcon from "../assets/icons/HomeIcon";
@@ -24,6 +24,10 @@ import TransferIcon from "../assets/icons/TransferIcon";
 import BackArrowIcon from "../assets/icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import RechargeIcon from "../assets/icons/RechargeIcon";
+import TransferScreen from "../screens/TransferScreen";
+import LogoutIcon from "../assets/icons/Logout";
+import TransactionHistoryScreen from "../screens/TransactionsHistoryScreen";
+import HistoryIcon from "../assets/icons/HistoryIcon";
 
 /**
  * @const Tab
@@ -92,7 +96,13 @@ const Router = () => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 },
-                animation: 'shift'
+                animation: 'shift',
+                headerRight: () => <TouchableOpacity 
+                    style={{ paddingRight: widthPercentageToDP(5) }}
+                    onPress={handleLogout}
+                >
+                    <LogoutIcon color={colors.white}/>
+                </TouchableOpacity>
             }}
             initialRouteName={routes.home}
         >
@@ -107,7 +117,7 @@ const Router = () => {
                     headerTitle: () => <CustomText color={colors.white} text="Wallet" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <CustomText size="body" text="Wallet" color={colors.darkGrey60}/>;
+                        return <CustomText size="body" text="Wallet" color={colors.white}/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
@@ -123,7 +133,7 @@ const Router = () => {
 
             <Tab.Screen
                 name={routes.transfer}
-                component={HomeScreen}
+                component={TransferScreen}
                 options={{
                     headerShown: true,
                     headerStyle: {
@@ -132,11 +142,36 @@ const Router = () => {
                     headerTitle: () => <CustomText color={colors.white} text="Send Money" size="h1" weight="bold"/>,
                     //@ts-ignore
                     tabBarLabel: ({ focused, color }) => {
-                        return <CustomText size="body" text="Send Money" color={colors.darkGrey60}/>;
+                        return <CustomText size="body" text="Send Money" color={colors.white}/>;
                     },
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
                             Svg={TransferIcon}
+                            focused={focused}
+                            //@ts-ignore
+                            // height={size}
+                            color={color}
+                        />
+                    )
+                }}
+            />
+
+            <Tab.Screen
+                name={routes.history}
+                component={TransactionHistoryScreen}
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colors.primaryColor,
+                    },
+                    headerTitle: () => <CustomText color={colors.white} text="Transactions History" size="h1" weight="bold"/>,
+                    //@ts-ignore
+                    tabBarLabel: ({ focused, color }) => {
+                        return <CustomText size="body" text="Transactions" color={colors.white}/>;
+                    },
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <TabBarIcon
+                            Svg={HistoryIcon}
                             focused={focused}
                             //@ts-ignore
                             // height={size}

@@ -16,9 +16,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
  * @property {string} status - Estado de la transacción ('success', 'failed', 'pending').
  */
 interface Transaction {
-    id: string;
-    senderId: string;
-    receiverId: string;
+    id?: string;
+    senderId?: string;
+    receiverId?: string;
     amount: number;
     date: string;
     status: 'success' | 'failed' | 'pending';

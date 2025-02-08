@@ -1,6 +1,8 @@
 // src/components/TransactionItem.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import CustomText from '../common/CustomText';
+import colors from '../../config/colors';
 
 interface Props {
     transaction: {
@@ -10,11 +12,17 @@ interface Props {
         amount: number;
         date: string;
         status: 'success' | 'failed' | 'pending';
+        createdAt?: Date,
+        sender?: any,
+        receiver?: any
     };
+    user: User
 }
 
-const TransactionItem: React.FC<Props> = ({ transaction }) => {
-    const isIncome = transaction.receiverId === 'self';
+const TransactionItem: React.FC<Props> = ({ transaction, user }) => {
+    const isIncome = user?.email !== transaction.sender?.email;
+    const displayParty = isIncome ? `Received from: ${transaction.sender.email}` : `Sent to ${transaction.receiver.email}`; // Obtener el nombre del remitente o destinatario
+
     const statusColor =
         transaction.status === 'success' ? 'green' :
             transaction.status === 'failed' ? 'red' : 'gray';
@@ -32,12 +40,11 @@ const TransactionItem: React.FC<Props> = ({ transaction }) => {
     return (
         <View style={styles.container}>
             <View style={styles.details}>
-                <Text style={amountStyle}>
-                    {isIncome ? `+$${transaction.amount}` : `-$${transaction.amount}`}
-                </Text>
-                <Text style={styles.date}>{new Date(transaction.date).toLocaleDateString()}</Text>
+                <CustomText style={amountStyle} text={isIncome ? `+$${transaction.amount}` : `-$${transaction.amount}`} textAlign='left'/>
+                <CustomText textAlign='right' text={displayParty} size='caption' color={colors.neutralGray}/> 
+                <CustomText style={styles.date} text={new Date(transaction.createdAt as Date).toLocaleDateString()} textAlign='left'/>
             </View>
-            <Text style={statusStyle}>{transaction.status}</Text>
+            <CustomText style={statusStyle} text={transaction.status}/>
         </View>
     );
 };
@@ -65,6 +72,7 @@ const styles = StyleSheet.create({
     status: {  // Estilo base
         fontSize: 14,
         fontWeight: 'bold',
+        textTransform: 'capitalize',
     },
 });
 

@@ -14,7 +14,7 @@ function TransferIcon({width, height, color, ...otherProps}: IconProps) {
     >
       <Path
         d="M19.5 16.5H6m-.5-8H19M16 13l3.5 3.5L16 20m-7-8L5.5 8.5 9 5"
-        stroke={colors.darkGrey60}
+        stroke={colors.white}
         strokeWidth={1.2}
       />
     </Svg>
