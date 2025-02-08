@@ -1,6 +1,8 @@
 // src/components/TransactionItem.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import CustomText from '../common/CustomText';
+import colors from '../../config/colors';
 
 interface Props {
     transaction: {
@@ -10,11 +12,16 @@ interface Props {
         amount: number;
         date: string;
         status: 'success' | 'failed' | 'pending';
+        createdAt?: Date,
+        sender?: any,
+        receiver?: any
     };
 }
 
 const TransactionItem: React.FC<Props> = ({ transaction }) => {
     const isIncome = transaction.receiverId === 'self';
+    const displayParty = isIncome ? `Received from: ${transaction.sender.email}` : `Sent to ${transaction.receiver.email}`; // Obtener el nombre del remitente o destinatario
+
     const statusColor =
         transaction.status === 'success' ? 'green' :
             transaction.status === 'failed' ? 'red' : 'gray';
@@ -35,7 +42,8 @@ const TransactionItem: React.FC<Props> = ({ transaction }) => {
                 <Text style={amountStyle}>
                     {isIncome ? `+$${transaction.amount}` : `-$${transaction.amount}`}
                 </Text>
-                <Text style={styles.date}>{new Date(transaction.date).toLocaleDateString()}</Text>
+                <CustomText textAlign='right' text={displayParty} size='caption' color={colors.neutralGray}/> 
+                <Text style={styles.date}>{new Date(transaction.createdAt as Date).toLocaleDateString()}</Text>
             </View>
             <Text style={statusStyle}>{transaction.status}</Text>
         </View>

@@ -8,18 +8,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 /**
- * @interface User
- * @description Interface defining the structure of a user object (replace with actual user type).
- */
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    balance: number;
-    // Add more user properties here
-}
-
-/**
  * @interface UserState
  * @description Interface defining the structure of the user state.
  * @property {User | null} currentUser - The currently logged-in user.

@@ -17,7 +17,8 @@ interface User {
     id: string;
     name: string;
     email: string;
-    balance: number;
+    balance?: number;
+    password?: string;
 }
 
 /**

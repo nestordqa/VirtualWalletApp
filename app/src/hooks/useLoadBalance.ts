@@ -48,7 +48,7 @@ const useLoadBalance = (): UseLoadBalanceResult => {
         try {
             if (jwt) {
                 const loadBalanceRequest = await loadBalance(amount, jwt);
-                if (loadBalanceRequest) {
+                if (loadBalanceRequest && loadBalanceRequest.balance) {
                     dispatch(updateUserBalance(loadBalanceRequest.balance));
                 } else {
                     setError('Failed to load balance: Updated user is null.');

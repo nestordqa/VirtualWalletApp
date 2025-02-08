@@ -24,6 +24,7 @@ import TransferIcon from "../assets/icons/TransferIcon";
 import BackArrowIcon from "../assets/icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import RechargeIcon from "../assets/icons/RechargeIcon";
+import TransferScreen from "../screens/TransferScreen";
 
 /**
  * @const Tab
@@ -123,7 +124,7 @@ const Router = () => {
 
             <Tab.Screen
                 name={routes.transfer}
-                component={HomeScreen}
+                component={TransferScreen}
                 options={{
                     headerShown: true,
                     headerStyle: {

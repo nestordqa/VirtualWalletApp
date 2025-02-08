@@ -235,7 +235,7 @@ const modalStyles = StyleSheet.create({
         borderRadius: 20,
         padding: 35,
         alignItems: 'center',
-        shadowColor: '#000',
+        shadowColor: colors.black,
         shadowOffset: {
             width: 0,
             height: 2,

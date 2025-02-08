@@ -16,6 +16,8 @@ interface Transaction {
     amount: number;
     date: string;
     status: 'success' | 'failed' | 'pending';
+    sender?: any,
+    receiver?: any
 }
 
 /**
