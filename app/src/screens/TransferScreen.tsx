@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { createTransaction } from '../api/transactionApi';
 import { updateUserBalance } from '../store/authSlice';
+import { addTransaction } from '../store/walletSlice';
 
 /**
  * @interface User
@@ -55,7 +56,7 @@ const TransferScreen = () => {
     const [isTransferring, setIsTransferring] = useState(false);
     const { jwt, user } = useSelector((state: RootState) => state.auth); // Obtener el JWT
     //Balance section
-    const currentBalance = user ? user.balance : 0;
+    const currentBalance = user?.balance ?? 0;
 
     /**
      * @function handleUserSelect
@@ -81,7 +82,7 @@ const TransferScreen = () => {
             Alert.alert('Error', 'Please enter a valid amount greater than 0.');
             return;
         }
-        if (currentBalance && amount > currentBalance) {
+        if (amount > currentBalance) {
             Alert.alert("Error", "Insufficient funds");
             return;
         }
@@ -95,12 +96,14 @@ const TransferScreen = () => {
                     try {
                         const transaction = await createTransaction(selectedUser.email, amount, jwt as string);
                         if (transaction) {
-                            Alert.alert('Success', `Successfully transferred $${amount} to ${selectedUser.email}`);
+                            Alert.alert(transaction.status.toUpperCase(), `${transaction.status.toUpperCase()} transference $${amount} to ${selectedUser.email}`);
                             // Reset state
                             setTransferAmount('');
                             setSelectedUser(null);
-                            dispatch(updateUserBalance(transaction?.sender?.balance))
-                            console.log(transaction);
+                            if (transaction.status === 'success') {
+                                dispatch(updateUserBalance(transaction.sender.balance - (transaction.amount)));
+                            }
+                            dispatch(addTransaction(transaction))
                             navigation.goBack(); // Navigate back to WalletScreen
                         } else {
                             Alert.alert('Error', 'Failed to create transaction.');

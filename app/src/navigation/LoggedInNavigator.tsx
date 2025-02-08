@@ -26,6 +26,8 @@ import { useNavigation } from "@react-navigation/native";
 import RechargeIcon from "../assets/icons/RechargeIcon";
 import TransferScreen from "../screens/TransferScreen";
 import LogoutIcon from "../assets/icons/Logout";
+import TransactionHistoryScreen from "../screens/TransactionsHistoryScreen";
+import HistoryIcon from "../assets/icons/HistoryIcon";
 
 /**
  * @const Tab
@@ -145,6 +147,31 @@ const Router = () => {
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabBarIcon
                             Svg={TransferIcon}
+                            focused={focused}
+                            //@ts-ignore
+                            // height={size}
+                            color={color}
+                        />
+                    )
+                }}
+            />
+
+            <Tab.Screen
+                name={routes.history}
+                component={TransactionHistoryScreen}
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colors.primaryColor,
+                    },
+                    headerTitle: () => <CustomText color={colors.white} text="Transactions History" size="h1" weight="bold"/>,
+                    //@ts-ignore
+                    tabBarLabel: ({ focused, color }) => {
+                        return <CustomText size="body" text="Transactions" color={colors.white}/>;
+                    },
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <TabBarIcon
+                            Svg={HistoryIcon}
                             focused={focused}
                             //@ts-ignore
                             // height={size}

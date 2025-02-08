@@ -6,4 +6,5 @@ export const routes = {
     addBalance: 'Add Balance',
     transfer: 'Transfer',
     transactionsHistory: 'Transactions',
+    history: 'History'
 };

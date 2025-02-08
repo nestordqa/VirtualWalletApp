@@ -44,6 +44,8 @@ const WalletScreen = () => {
      */
     const { jwt, user } = useSelector((state: RootState) => state.auth);
 
+    console.log(user, 'SOY EL USUARIO ===>>>>');
+
     /**
      * @hook useTransactionsData
      * @description Custom hook to fetch transactions and manage loading/error states.
@@ -109,22 +111,6 @@ const WalletScreen = () => {
         }
     };
 
-    /**
-     * @function handleLogout
-     * @description Logs the user out by removing the JWT from AsyncStorage and dispatching the logout action.
-     */
-    const handleLogout = async () => {
-        try {
-            await AsyncStorage.removeItem('jwt');
-            // dispatch(logout());  Removing this to prevent type checking errors. Logout button doesn't exist here anyway
-            //@ts-ignore
-            navigation.navigate(routes.login);
-        } catch (logoutError: any) {
-            console.error('Error during logout:', logoutError);
-            Alert.alert('Error', 'Logout failed: ' + (logoutError.message || 'Unknown error'));
-        }
-    };
-
     // Render loading indicator while data is being fetched
     if (transactionsLoading || loadBalanceLoading) {
         return (
@@ -164,7 +150,7 @@ const WalletScreen = () => {
             <FlatList
                 data={transactions?.slice(0, 5) ?? []}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <TransactionItem transaction={item} />}
+                renderItem={({ item }) => <TransactionItem transaction={item} user={user}/>}
                 ListEmptyComponent={() => <CustomText text="No recent transactions." />}
             />
 

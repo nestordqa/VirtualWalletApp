@@ -33,7 +33,7 @@ const useUserList = (): UseUserListResult => {
     const [users, setUsers] = useState<User[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { jwt } = useSelector((state: RootState) => state.auth);
+    const { jwt, user } = useSelector((state: RootState) => state.auth);
 
 
     /**
@@ -46,7 +46,8 @@ const useUserList = (): UseUserListResult => {
         try {
             const fetchedUsers = await fetchAllUsers(jwt);
             if (fetchedUsers) {
-                setUsers(fetchedUsers);
+                const response = fetchedUsers.filter((item) => item.id !== user?.id);
+                setUsers(response);
             } else {
                 setError('Failed to fetch users: User list is null.');
             }
