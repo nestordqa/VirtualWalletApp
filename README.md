@@ -47,7 +47,6 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
     ```
 
     o
-
     ```
     yarn install
     ```
