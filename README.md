@@ -75,7 +75,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 ## Estructura del Proyecto 📂
 
 Aquí tienes una breve descripción de la estructura del proyecto:
-
+```
 virtual-wallet-app/
 ├── app.json               # Archivo de configuración de Expo
 ├── package.json           # Dependencias del proyecto y scripts
@@ -132,6 +132,7 @@ virtual-wallet-app/
 │   ├── App.tsx               # Componente raíz
 │   └── ...
 └── ...
+```
 ## Configuración ⚙️
 
 El archivo `src/config/constants.ts` contiene valores de configuración globales para la aplicación. Para conectar la aplicación a tu backend local, debes actualizar la constante `API_URL` con la IP de tu máquina:
