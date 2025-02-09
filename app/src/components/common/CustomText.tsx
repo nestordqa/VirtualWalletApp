@@ -1,9 +1,40 @@
+/**
+ * @file CustomText.tsx
+ * @description A versatile text component with customizable styles.
+ * @module CustomText
+ */
+
 import React from 'react';
 import { View, Text, TextStyle, ViewStyle } from 'react-native';
 import { CustomTextProps } from '../../types/components';
 import theme from '../../config/theme';
 import colors from '../../config/colors';
 
+/**
+ * @interface CustomTextProps
+ * @description Defines the props for the CustomText component.
+ * @property {boolean} [hasBgColor] - Determines if the text has a background color.
+ * @property {'light' | 'medium' | 'semibold' | 'bold'} [weight='medium'] - Font weight.
+ * @property {'left' | 'center' | 'right'} [textAlign] - Text alignment.
+ * @property {ViewStyle} [containerStyle] - Style for the container (if hasBgColor is true).
+ * @property {'none' | 'underline'} [textDecoration] - Text decoration.
+ * @property {'body' | 'body2' | 'caption' | 'caption2' | 'captionPlus' | 'h4' | 'h3' | 'h2' | 'h1' | 'profileName' | 'tabBarLabel' | 'button'} [size='h3'] - Font size.
+ * @property {TextStyle} [style] - Additional text styles.
+ * @property {string} text - The text to display.
+ * @property {'white' | 'primary' | 'secondary' | 'neutral' | string} [color] - Text color.
+ * @property {'primary' | 'secondary' | string} [backgroundColor] - Background color.
+ * @property {'none' | 'sm' | 'mm' | 'lm'} [padding] - Padding size.
+ * @property {'sm' | 'mm' | 'lm' | 'full'} [borderRadius] - Border radius size.
+ * @property {number} [numberOfLines] - Maximum number of lines.
+ */
+
+/**
+ * @function CustomText
+ * @description A highly customizable text component that allows setting various styles,
+ *              including font size, weight, color, background color, text decoration, and more.
+ * @param {CustomTextProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered CustomText component.
+ */
 const CustomText: React.FC<CustomTextProps> = ({
     hasBgColor,
     weight = 'medium',
@@ -20,7 +51,11 @@ const CustomText: React.FC<CustomTextProps> = ({
     numberOfLines
 }) => {
 
-    // Function to determine the font size based on the 'size' prop
+    /**
+     * @function getSize
+     * @description Determines the font size based on the 'size' prop.
+     * @returns {TextStyle} Font size style.
+     */
     const getSize = (): TextStyle => {
         switch (size) {
             case 'body': return theme.fontSize.body;
@@ -39,7 +74,11 @@ const CustomText: React.FC<CustomTextProps> = ({
         }
     };
 
-    // Function to determine the font weight based on the 'weight' prop
+    /**
+     * @function getWeight
+     * @description Determines the font weight based on the 'weight' prop.
+     * @returns {string} Font weight value.
+     */
     const getWeight = () => {
         switch (weight) {
             case 'light': return theme.fontWeight.light;
@@ -49,25 +88,37 @@ const CustomText: React.FC<CustomTextProps> = ({
         }
     };
 
-    // Function to determine the text color based on the 'color' prop
+    /**
+     * @function getColor
+     * @description Determines the text color based on the 'color' prop.
+     * @returns {TextStyle} Text color style.
+     */
     const getColor = (): TextStyle => {
         switch (color) {
             case 'white': return theme.color.white;
             case 'primary': return theme.color.primary;
             case 'secondary': return theme.color.secondary;
             case 'neutral': return { color: colors.neutralGray };
-            default: 
-		    if (color) return {color: color}
-            return theme.color.black
+            default:
+                if (color) return { color: color }
+                return theme.color.black
         }
     };
 
-    // Function to determine the text decoration style
+    /**
+     * @function getDecoration
+     * @description Determines the text decoration style based on the 'textDecoration' prop.
+     * @returns {string} Text decoration value.
+     */
     const getDecoration = () => {
         return textDecoration === 'underline' ? theme.textDecoration.textDecorationLine.underline : theme.textDecoration.textDecorationLine.none;
     };
 
-    // Function to determine the background color based on the 'backgroundColor' prop
+    /**
+     * @function getBackgroundColor
+     * @description Determines the background color based on the 'backgroundColor' prop.
+     * @returns {ViewStyle} Background color style.
+     */
     const getBackgroundColor = (): ViewStyle => {
         if (hasBgColor) {
             switch (backgroundColor) {
@@ -79,7 +130,11 @@ const CustomText: React.FC<CustomTextProps> = ({
         return theme.backgroundColor.none;
     };
 
-    // Function to determine the padding based on the 'padding' prop
+    /**
+     * @function getPadding
+     * @description Determines the padding based on the 'padding' prop.
+     * @returns {ViewStyle} Padding style.
+     */
     const getPadding = (): ViewStyle => {
         switch (padding) {
             case 'sm': return theme.padding.sm;
@@ -89,7 +144,11 @@ const CustomText: React.FC<CustomTextProps> = ({
         }
     };
 
-    // Function to determine the border radius based on the 'borderRadius' prop
+    /**
+     * @function getBorderRadius
+     * @description Determines the border radius based on the 'borderRadius' prop.
+     * @returns {ViewStyle} Border radius style.
+     */
     const getBorderRadius = (): ViewStyle => {
         switch (borderRadius) {
             case 'sm': return theme.border.radius.sm;
@@ -102,53 +161,55 @@ const CustomText: React.FC<CustomTextProps> = ({
 
     // Render the component with or without a background based on 'hasBgColor'
     return hasBgColor ? (
-        <View 
+        <View
             style={[
-                getBackgroundColor(), 
-                getBorderRadius(), 
+                getBackgroundColor(),
+                getBorderRadius(),
                 //@ts-ignore
-                theme.flex.alignItems.center, 
-                { 
-                    paddingVertical: 5 
-                }, 
+                theme.flex.alignItems.center,
+                {
+                    paddingVertical: 5
+                },
                 containerStyle
             ]}
         >
             {/*@ts-ignore */}
-            <Text 
-                numberOfLines={ numberOfLines } 
+            <Text
+                numberOfLines={numberOfLines}
                 allowFontScaling
                 style={[
-                    getSize(), 
-                    getColor(), 
-                    getDecoration(), 
-                    getPadding(), 
-                    getWeight(), 
-                    {...style, 
+                    getSize(),
+                    getColor(),
+                    getDecoration(),
+                    getPadding(),
+                    getWeight(),
+                    {
+                        ...style,
                         fontFamily: theme.fontFamily,
                         textAlign: textAlign || 'center'
                     }
-                ]} 
+                ]}
             >
                 {text}
             </Text>
         </View>
     ) : (
         // @ts-ignore
-        <Text 
-            numberOfLines={ numberOfLines } 
+        <Text
+            numberOfLines={numberOfLines}
             allowFontScaling
             style={[
-                getSize(), 
-                getColor(), 
-                getDecoration(), 
-                getPadding(), 
-                getWeight(), 
-                {...style, 
-                    fontFamily: theme.fontFamily, 
+                getSize(),
+                getColor(),
+                getDecoration(),
+                getPadding(),
+                getWeight(),
+                {
+                    ...style,
+                    fontFamily: theme.fontFamily,
                     textAlign: textAlign || 'center'
                 }
-            ]} 
+            ]}
         >
             {text}
         </Text>
