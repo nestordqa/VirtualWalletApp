@@ -7,9 +7,9 @@
 
 import React from 'react';
 import colors from '../../config/colors';
-import { TextButtonProps } from '../../types/common';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import CustomText from './CustomText';
+import { TextButtonProps } from '../../types/components';
 
 /**
  * @function TextButton
