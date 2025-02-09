@@ -1,4 +1,3 @@
-```markdown
 # Aplicación de Billetera Virtual 📱💸
 
 ¡Bienvenido/a al repositorio de la aplicación de Billetera Virtual! Este proyecto te permite gestionar tus finanzas de forma sencilla y segura directamente desde tu dispositivo móvil.
@@ -9,9 +8,8 @@
 2.  [Requisitos Previos](#requisitos-previos)
 3.  [Instalación](#instalacion)
 4.  [Ejecución de la Aplicación](#ejecucion-de-la-aplicacion)
-5.  [Estructura del Proyecto](#estructura-del-proyecto)
-6.  [Configuración](#configuracion)
-7.  [Contribuciones](#contribuciones)
+5.  [Configuración](#configuracion)
+6.  [Contribuciones](#contribuciones)
 
 ## Descripción del Proyecto 💡
 
@@ -78,7 +76,6 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 Aquí tienes una breve descripción de la estructura del proyecto:
 
-```
 virtual-wallet-app/
 ├── app.json               # Archivo de configuración de Expo
 ├── package.json           # Dependencias del proyecto y scripts
@@ -135,8 +132,6 @@ virtual-wallet-app/
 │   ├── App.tsx               # Componente raíz
 │   └── ...
 └── ...
-```
-
 ## Configuración ⚙️
 
 El archivo `src/config/constants.ts` contiene valores de configuración globales para la aplicación. Para conectar la aplicación a tu backend local, debes actualizar la constante `API_URL` con la IP de tu máquina:
