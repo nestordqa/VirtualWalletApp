@@ -44,8 +44,6 @@ const WalletScreen = () => {
      */
     const { jwt, user } = useSelector((state: RootState) => state.auth);
 
-    console.log(user, 'SOY EL USUARIO ===>>>>');
-
     /**
      * @hook useTransactionsData
      * @description Custom hook to fetch transactions and manage loading/error states.
