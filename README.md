@@ -11,9 +11,7 @@
 4.  [Ejecución de la Aplicación](#ejecucion-de-la-aplicacion)
 5.  [Estructura del Proyecto](#estructura-del-proyecto)
 6.  [Configuración](#configuracion)
-7.  [Pruebas (Testing)](#pruebas-testing)
-8.  [Contribuciones](#contribuciones)
-9.  [Licencia](#licencia)
+7.  [Contribuciones](#contribuciones)
 
 ## Descripción del Proyecto 💡
 
