@@ -5,13 +5,12 @@
 
 ## Tabla de Contenido 🗂️
 
-1.  [Descripción del Proyecto](#descripcion-del-proyecto)
-2.  [Requisitos Previos](#requisitos-previos)
-3.  [Instalación](#instalacion)
-4.  [Ejecución de la Aplicación](#ejecucion-de-la-aplicacion)
-5.  [Estructura del Proyecto](#estructura-del-proyecto)
-6.  [Configuración](#configuracion)
-7.  [Contribuciones](#contribuciones)
+1.  Descripción del Proyecto
+2.  Requisitos Previos
+3.  Instalación
+4.  Ejecución de la Aplicación
+5.  Configuración
+6.  Contribuciones
 
 ## Descripción del Proyecto 💡
 
@@ -74,67 +73,6 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
     *   **iOS:** Puedes ejecutar la aplicación en el simulador de iOS o en un dispositivo iOS físico siguiendo las instrucciones proporcionadas por Expo CLI.
         *   Es posible que tengas que instalar `pod install` en la carpeta `iOS`.
 
-## Estructura del Proyecto 📂
-
-Aquí tienes una breve descripción de la estructura del proyecto:
-
-```
-virtual-wallet-app/
-├── app.json               # Archivo de configuración de Expo
-├── package.json           # Dependencias del proyecto y scripts
-├── tsconfig.json          # Configuración de TypeScript
-├── .gitignore             # Especifica los archivos que Git debe ignorar
-├── app/src/                  # Código fuente
-│   ├── components/       # Componentes de IU reutilizables
-│   │   ├── common/       # Componentes comunes/genéricos
-│   │   │   ├── Button.tsx  # Botón reutilizable
-│   │   │   ├── CustomText.tsx # Componente de texto personalizado
-│   │   │   ├── ButtonText.tsx # Componente de boton de texto personalizado
-│   │   │   └── ...
-│   │   ├── transactions/
-│   │   │   ├── TransactionItem.tsx # Elemento de transacción individual
-│   │   │   └── ...
-│   │   └── ...
-│   ├── config/           # Archivos de configuración
-│   │   ├── colors.ts       # Paleta de colores
-│   │   ├── theme.ts       # Para estilos globales
-│   │   ├── constants.ts  # Constantes de configuración del proyecto
-│   │   └── ...
-│   ├── hooks/              # Custom React hooks
-│   │   ├── useTransactionsData.ts # Hook para datos de transacciones
-│   │   ├── useLoadBalance.ts # Hook para datos de balance
-│   │   ├── useUsersList.ts # Hook para listado de usuarios
-│   │   └── ...
-│   ├── navigation/         # Configuración de la navegación
-│   │   ├── AppNavigator.tsx # Navegador principal de la aplicación
-│   │   ├── LoggedInNavigator.tsx # Navegador de cuando el usuario ya se encuentra logueado
-│   │   ├── routes.ts # Rutas de navegacion
-│   │   └── ...
-│   ├── screens/            # Pantallas de la aplicación
-│   │   ├── LoginScreen.tsx # Login
-│   │   ├── RegisterScreen.tsx # Registro de usuario nuevo
-│   │   ├── WalletScreen.tsx # Pantalla de la billetera
-│   │   ├── TransferScreen.tsx # Pantalla de transferencia
-│   │   ├── TransactionHistoryScreen.tsx # Pantalla del historial de transacciones
-│   │   └── ...
-│   ├── store/              # Configuración del store de Redux
-│   │   ├── store.ts        # Configuración del store de Redux
-│   │   ├── authSlice.ts    # Slice de Redux para autenticación
-│   │   ├── walletSlice.ts  # Slice de Redux para datos de la billetera
-│   │   ├── userSlice.ts    # Slice de Redux para datos de usuarios
-│   │   └── ...
-│   ├── api/                # Cliente API y funciones
-│   │   ├── apiClient.ts    # Configuración del cliente API
-│   │   ├── transactionApi.ts # Funciones API para transacciones
-│   │   ├── authApi.ts      # Funciones API para autenticacion
-│   │   └── usersApi.ts     # Funciones API para usuarios
-│   ├── utils/                # Funciones reutilizables
-│   │   ├── authUtils.ts    # Utils relacionados a autenticacion
-│   │   ├── handleError.ts    # Util para manejar errores en peticiones
-│   │   ├── userUtils.ts    # Utils relacionados a usuerios
-│   ├── App.tsx               # Componente raíz
-│   └── ...
-└── ...
 ```
 
 ## Configuración ⚙️
