@@ -6,9 +6,9 @@ import colors from '../../config/colors';
 
 interface Props {
     transaction: {
-        id: string;
-        senderId: string;
-        receiverId: string;
+        id: number;
+        senderId?: string;
+        receiverId?: string;
         amount: number;
         date: string;
         status: 'success' | 'failed' | 'pending';
