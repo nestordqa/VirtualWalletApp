@@ -8,8 +8,9 @@
 2.  [Requisitos Previos](#requisitos-previos)
 3.  [Instalación](#instalacion)
 4.  [Ejecución de la Aplicación](#ejecucion-de-la-aplicacion)
-5.  [Configuración](#configuracion)
-6.  [Contribuciones](#contribuciones)
+5.  [Estructura del Proyecto](#estructura-del-proyecto)
+6.  [Configuración](#configuracion)
+7.  [Contribuciones](#contribuciones)
 
 ## Descripción del Proyecto 💡
 
@@ -44,13 +45,6 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
     ```
     npm install
     ```
-
-    o
-
-    ```
-    yarn install
-    ```
-
 ## Ejecución de la Aplicación 🚀
 
 1.  **Inicia el servidor de desarrollo de Expo:**
@@ -75,6 +69,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 ## Estructura del Proyecto 📂
 
 Aquí tienes una breve descripción de la estructura del proyecto:
+
 ```
 virtual-wallet-app/
 ├── app.json               # Archivo de configuración de Expo
