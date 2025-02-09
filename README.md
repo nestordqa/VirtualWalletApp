@@ -45,12 +45,6 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
     ```
     npm install
     ```
-
-    o
-    ```
-    yarn install
-    ```
-
 ## Ejecución de la Aplicación 🚀
 
 1.  **Inicia el servidor de desarrollo de Expo:**
